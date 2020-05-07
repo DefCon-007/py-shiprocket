@@ -1,8 +1,8 @@
 import json
 from requests import request
 from urllib.parse import urljoin
-from exceptions import *
-from constants import *
+from .exceptions import *
+from .constants import *
 
 
 class ShipRocket:
