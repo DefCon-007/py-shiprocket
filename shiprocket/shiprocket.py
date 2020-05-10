@@ -50,10 +50,27 @@ class ShipRocket:
         self.token = response_dict['token']
         self.company_id = response_dict['company_id']
 
-    def get_orders(self, filter_by, filter_value, per_page):
+    def return_generator_for_objects(self, data, args): 
+        is_next_page_present = True
+        while is_next_page_present:
+            for item in data['data']: 
+                yield item 
+            next_page_link = data['meta']['pagination']["links"].get("next")
+            if next_page_link: 
+                is_next_page_present=True
+                response = self.send_request("GET", next_page_link, args)
+                data = response.json()
+            else: 
+                is_next_page_present=False
+
+    def get_orders_generator(self, filter_by, filter_value, per_page=30):
         """
 
         """
+        allowed_filters = [FilterBy.PAYMENT_METHOD, FilterBy.CHANNEL_ORDER_ID, FilterBy.STATUS]
+        if filter_by not in allowed_filters: 
+            raise InvalidArgumentException("The supplied filter value is invalid!")
+        
         args = {
             "json": {
                 "filter": filter_value,
@@ -62,16 +79,19 @@ class ShipRocket:
             }
         }
         response = self.send_request("GET", "external/orders", args)
-
-        return response
+        return self.return_generator_for_objects(response.json(), args)
 
     def get_all_shipments(self, sort=None, sort_by=None, filter_value=None, filter_by=None):
         """
         Get the shipment details of all the shipments in your Shiprocket account.
         """
+        if not (sort and sort_by): 
+            raise InvalidArgumentException("Either give both `sort` and `sort_by` or None")
         if sort:
-            if not (sort == "ASC" or sort == "DESC"):
-                raise InvalidArgumentException("The value of `sort` can only be ASC or DESC")
+            if sort not in SortOrder.values():
+                raise InvalidArgumentException("The value of `sort` is not valid!")
+            if not sort_by: 
+                raise InvalidArgumentException("Please enter a value of `sort_by` is you are adding `sort` value.")
 
         args = {
             "json": {
