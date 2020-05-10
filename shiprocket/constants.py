@@ -5,12 +5,17 @@ class BaseEnum(object):
         return [e for e in cls.__dict__ if not e.startswith("__")]
 
     @classmethod
+    def values(cls): 
+        data = cls.__dict__
+        return [data[e] for e in data if not e.startswith("__")]
+
+    @classmethod
     def choices(cls):
-        return [e for e in iteritems(cls.__dict__) if not e[0].startswith("__")]
+        return [e for e in cls.__dict__.items() if not e[0].startswith("__")]
 
     @classmethod
     def getKey(cls, value):
-        keys = [e[0] for e in iteritems(cls.__dict__) if e[1] == value]
+        keys = [e[0] for e in cls.__dict__.items() if e[1] == value]
         return keys[0] if len(keys) > 0 else None
 
 
@@ -70,8 +75,83 @@ OrderStatus = ShipEnum("OrderStatus", {
     "RTO_NDR": "46"
 })
 
+ShipmentStatus = ShipEnum("ShipmentStatus", {
+    "AWB_ASSIGNED": "1",
+    "LABEL_GENERATED": "2",
+    "PICKUP_SCHEDULED/GENERATED": "3",
+    "PICKUP_QUEUED": "4",
+    "MANIFEST_GENERATED": "5",
+    "SHIPPED": "6",
+    "DELIVERED": "7",
+    "CANCELLED": "8",
+    "RTO_INITIATED": "9",
+    "RTO_DELIVERED": "10",
+    "PENDING": "11",
+    "LOST": "12",
+    "PICKUP_ERROR": "13",
+    "RTO_ACKNOWLEDGED": "14",
+    "PICKUP_RESCHEDULED": "15",
+    "CANCELLATION_REQUESTED": "16",
+    "OUT_FOR_DELIVERY": "17",
+    "IN_TRANSIT": "18",
+    "OUT_FOR_PICKUP": "19",
+    "PICKUP_EXCEPTION": "20",
+    "UNDELIVERED": "21",
+    "DELAYED": "22",
+    "PARTIAL_DELIVERED": "23",
+    "DESTROYED": "24",
+    "DAMAGED": "25",
+    "FULFILLED": "26",
+    "REACHED_DESTINATION_HUB": "38",
+    "MISROUTED": "39",
+    "RTO_NDR": "40",
+    "RTO_OFD": "41",
+    "PICKED_UP": "42"
+})
+
 FilterBy = ShipEnum("FilterBy",{
     "PAYMENT_METHOD": "payment_method",
     "CHANNEL_ORDER_ID": "channel_order_id",
     "STATUS": "status"
+})
+
+SortOrder = ShipEnum("SortOrder", {
+    "ASCENDING": "ASC",
+    "DESCENDING": "DESC"
+})
+
+Courier = ShipEnum("Courier", {
+    "BLUEDART": "1",
+    "FEDEX": "2",
+    "FEDEX_PACKAGING": "7",
+    "DHL_PACKET_INTERNATIONAL#": "8",
+    "DELHIVERY": "10",
+    "FEDEX_SURFACE": "12",
+    "ECOMEXP": "14",
+    "DOTZOT": "16",
+    "XPRESSBEES": "33",
+    "ARAMEX_INTERNATIONAL": "35",
+    "DHL_PACKET_PLUS_INTERNATIONAL": "37",
+    "DHL_PARCEL_INTERNATIONAL_DIRECT": "38",
+    "DELHIVERY_SURFACE": "39",
+    "GATI_SURFACE": "40",
+    "FEDEX_FR": "41",
+    "FEDEX_SL": "42",
+    "DELHIVERY_SURFACE_STANDAR": "43",
+    "DELHIVERY_SURFACE_LITE": "44",
+    "ECOM_EXP_REVERSE": "45",
+    "SHADOW_FAX_REVERSE": "46",
+    "EKART": "48",
+    "WOW_EXPRESS": "50",
+    "XPRESSBEES_SURFACE": "51",
+    "RAPID_DELIVERY": "52",
+    "GATI_SG": "53",
+    "EKART_SURFACE": "54",
+    "DART_DART_PLUS": "55",
+    "DHL_EXPRESS": "56",
+    "PROFESSIONAL": "57",
+    "SHADOWFAX_FORWARD": "58",
+    "ECOM_ROS": "60",
+    "FEDEX-SURFACE_1KG": "62",
+    "DELHIVERY_FLASH_AIR": "63",
 })
